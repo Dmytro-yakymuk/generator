@@ -1,0 +1,20 @@
+{
+    "config": {
+        "cardAvatars": {
+            "pathToAvararsComponents": "./5/assets/components",
+            "pathToOutputAvatars": "./5/assets/output",
+            "pathToOutputJSON": "./5/assets/json",
+            "backgroundFolder": "BACKGROUND",
+            "headsFolder": "HEADS",
+            "hairFolder": "HAIR",
+            "tshirtsFolder": "PUFFA JACKET",
+            "headwearFolder": "HATS",
+            "glassesFolder": "GLASSES",
+            "earringsFolder": "EARRING",
+            "percentageHeadwear": 50,
+            "withoutHair": 22,
+            "percentageGlasses": 85,
+            "percentageEarrings": 25
+        }
+    }
+}

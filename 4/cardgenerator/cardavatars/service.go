@@ -125,19 +125,21 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 		}
 
 		// Glasses
-		pathToGlasses := filepath.Join(service.config.PathToAvararsComponents, service.config.GlassesFolder)
-		if count, err = imageprocessing.LayerComponentsCount(pathToGlasses); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		if rand.IsIncludeRange(service.config.PercentageGlasses) {
+			pathToGlasses := filepath.Join(service.config.PathToAvararsComponents, service.config.GlassesFolder)
+			if count, err = imageprocessing.LayerComponentsCount(pathToGlasses); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
 
-		if avatar.Glasses, err = rand.RandomInRange(count); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+			if avatar.Glasses, err = rand.RandomInRange(count); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
 
-		if layer, err = imageprocessing.CreateLayer(pathToGlasses, avatar.Glasses); err != nil {
-			return ErrCardAvatars.Wrap(err)
+			if layer, err = imageprocessing.CreateLayer(pathToGlasses, avatar.Glasses); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
+			layers = append(layers, layer)
 		}
-		layers = append(layers, layer)
 
 		// Earrings
 		if rand.IsIncludeRange(service.config.PercentageEarrings) {
@@ -178,11 +180,11 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 		return err
 	}
 
-	if err = os.MkdirAll("./4/assets/json", os.ModePerm); err != nil {
+	if err = os.MkdirAll(service.config.PathToOutputJSON, os.ModePerm); err != nil {
 		return err
 	}
 
-	if err = ioutil.WriteFile(filepath.Join("./4/assets/json", "components.json"), file, 0644); err != nil {
+	if err = ioutil.WriteFile(filepath.Join(service.config.PathToOutputJSON, "components.json"), file, 0644); err != nil {
 		return err
 	}
 

@@ -18,6 +18,7 @@ type Avatar struct {
 type Config struct {
 	PathToAvararsComponents string `json:"pathToAvararsComponents"`
 	PathToOutputAvarars     string `json:"pathToOutputAvatars"`
+	PathToOutputJSON        string `json:"pathToOutputJSON"`
 
 	BackgroundFolder string `json:"backgroundFolder"`
 	HeadsFolder      string `json:"headsFolder"`
@@ -29,6 +30,7 @@ type Config struct {
 
 	PercentageHeadwear int `json:"percentageHeadwear"`
 	WithoutHair        int `json:"withoutHair"`
+	PercentageGlasses  int `json:"percentageGlasses"`
 	PercentageEarrings int `json:"percentageEarrings"`
 }
 

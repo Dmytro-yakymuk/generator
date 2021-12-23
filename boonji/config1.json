@@ -1,0 +1,22 @@
+{
+    "config": {
+        "cardAvatars": {
+            "pathToAvararsComponents": "./1/assets/components",
+            "pathToOutputAvatars": "./1/assets/output",
+            "pathToOutputJSON": "./1/assets/json",
+            "backgroundFolder": "BACKGROUND",
+            "headsFolder": "HEADS",
+            "hairFolder": "HAIR",
+            "tshirtsFolder": "TSHIRT",
+            "necklaceFolder": "NECKLACE",
+            "jacketFolder": "JACKET",
+            "headwearFolder": "HATS",
+            "glassesFolder": "GLASSES",
+            "earringsFolder": "EARRING",
+            "percentageHeadwear": 50,
+            "withoutHair": 22,
+            "percentageGlasses": 85,
+            "percentageEarrings": 25
+        }
+    }
+}

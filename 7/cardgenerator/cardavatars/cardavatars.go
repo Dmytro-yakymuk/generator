@@ -16,12 +16,16 @@ type Avatar struct {
 type Config struct {
 	PathToAvararsComponents string `json:"pathToAvararsComponents"`
 	PathToOutputAvarars     string `json:"pathToOutputAvatars"`
+	PathToOutputJSON        string `json:"pathToOutputJSON"`
 
 	BackgroundFolder string `json:"backgroundFolder"`
 	HeadsFolder      string `json:"headsFolder"`
 	TshirtsFolder    string `json:"tshirtsFolder"`
 	HeadwearFolder   string `json:"headwearFolder"`
 	GlassesFolder    string `json:"glassesFolder"`
+
+	PercentageHeadwear int `json:"percentageHeadwear"`
+	PercentageGlasses  int `json:"percentageGlasses"`
 }
 
 // TypeImage defines the list of possible type of avatar image.

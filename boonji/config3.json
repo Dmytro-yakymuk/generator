@@ -1,0 +1,20 @@
+{
+    "config": {
+        "cardAvatars": {
+            "pathToAvararsComponents": "./3/assets/components",
+            "pathToOutputAvatars": "./3/assets/output",
+            "pathToOutputJSON": "./3/assets/json",
+            "backgroundFolder": "BACKGROUND",
+            "headsFolder": "HEADS",
+            "hairFolder": "HAIR",
+            "tshirtsFolder": "ZIPPED UP JACKET",
+            "headwearFolder": "HATS",
+            "glassesFolder": "GLASSES",
+            "earringsFolder": "EARRING",
+            "percentageHeadwear": 50,
+            "withoutHair": 22,
+            "percentageGlasses": 85,
+            "percentageEarrings": 25
+        }
+    }
+}

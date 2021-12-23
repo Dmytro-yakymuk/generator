@@ -108,34 +108,38 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 		layers = append(layers, layer)
 
 		// Headwear
-		pathToHeadwear := filepath.Join(service.config.PathToAvararsComponents, service.config.HeadwearFolder)
-		if count, err = imageprocessing.LayerComponentsCount(pathToHeadwear); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		if rand.IsIncludeRange(service.config.PercentageHeadwear) {
+			pathToHeadwear := filepath.Join(service.config.PathToAvararsComponents, service.config.HeadwearFolder)
+			if count, err = imageprocessing.LayerComponentsCount(pathToHeadwear); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
 
-		if avatar.Headwear, err = rand.RandomInRange(count); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+			if avatar.Headwear, err = rand.RandomInRange(count); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
 
-		if layer, err = imageprocessing.CreateLayer(pathToHeadwear, avatar.Headwear); err != nil {
-			return ErrCardAvatars.Wrap(err)
+			if layer, err = imageprocessing.CreateLayer(pathToHeadwear, avatar.Headwear); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
+			layers = append(layers, layer)
 		}
-		layers = append(layers, layer)
 
 		// Glasses
-		pathToGlasses := filepath.Join(service.config.PathToAvararsComponents, service.config.GlassesFolder)
-		if count, err = imageprocessing.LayerComponentsCount(pathToGlasses); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		if rand.IsIncludeRange(service.config.PercentageGlasses) {
+			pathToGlasses := filepath.Join(service.config.PathToAvararsComponents, service.config.GlassesFolder)
+			if count, err = imageprocessing.LayerComponentsCount(pathToGlasses); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
 
-		if avatar.Glasses, err = rand.RandomInRange(count); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+			if avatar.Glasses, err = rand.RandomInRange(count); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
 
-		if layer, err = imageprocessing.CreateLayer(pathToGlasses, avatar.Glasses); err != nil {
-			return ErrCardAvatars.Wrap(err)
+			if layer, err = imageprocessing.CreateLayer(pathToGlasses, avatar.Glasses); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
+			layers = append(layers, layer)
 		}
-		layers = append(layers, layer)
 
 		stringComponent := fmt.Sprintf("%d_%d_%d_%d_%d_%d", avatar.Background, avatar.Heads, avatar.Hair, avatar.Tshirts, avatar.Headwear, avatar.Glasses)
 		for _, stringComp := range stringComponents {
@@ -159,11 +163,11 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 		return err
 	}
 
-	if err = os.MkdirAll("./6/assets/json", os.ModePerm); err != nil {
+	if err = os.MkdirAll(service.config.PathToOutputJSON, os.ModePerm); err != nil {
 		return err
 	}
 
-	if err = ioutil.WriteFile(filepath.Join("./6/assets/json", "components.json"), file, 0644); err != nil {
+	if err = ioutil.WriteFile(filepath.Join(service.config.PathToOutputJSON, "components.json"), file, 0644); err != nil {
 		return err
 	}
 
