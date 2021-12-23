@@ -93,21 +93,19 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 		layers = append(layers, layer)
 
 		// Headwear
-		if rand.IsIncludeRange(service.config.PercentageHeadwear) {
-			pathToHeadwear := filepath.Join(service.config.PathToAvararsComponents, service.config.HeadwearFolder)
-			if count, err = imageprocessing.LayerComponentsCount(pathToHeadwear); err != nil {
-				return ErrCardAvatars.Wrap(err)
-			}
-
-			if avatar.Headwear, err = rand.RandomInRange(count); err != nil {
-				return ErrCardAvatars.Wrap(err)
-			}
-
-			if layer, err = imageprocessing.CreateLayer(pathToHeadwear, avatar.Headwear); err != nil {
-				return ErrCardAvatars.Wrap(err)
-			}
-			layers = append(layers, layer)
+		pathToHeadwear := filepath.Join(service.config.PathToAvararsComponents, service.config.HeadwearFolder)
+		if count, err = imageprocessing.LayerComponentsCount(pathToHeadwear); err != nil {
+			return ErrCardAvatars.Wrap(err)
 		}
+
+		if avatar.Headwear, err = rand.RandomInRange(count); err != nil {
+			return ErrCardAvatars.Wrap(err)
+		}
+
+		if layer, err = imageprocessing.CreateLayer(pathToHeadwear, avatar.Headwear); err != nil {
+			return ErrCardAvatars.Wrap(err)
+		}
+		layers = append(layers, layer)
 
 		// Glasses
 		if rand.IsIncludeRange(service.config.PercentageGlasses) {

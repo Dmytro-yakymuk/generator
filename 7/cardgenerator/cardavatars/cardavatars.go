@@ -24,8 +24,7 @@ type Config struct {
 	HeadwearFolder   string `json:"headwearFolder"`
 	GlassesFolder    string `json:"glassesFolder"`
 
-	PercentageHeadwear int `json:"percentageHeadwear"`
-	PercentageGlasses  int `json:"percentageGlasses"`
+	PercentageGlasses int `json:"percentageGlasses"`
 }
 
 // TypeImage defines the list of possible type of avatar image.
