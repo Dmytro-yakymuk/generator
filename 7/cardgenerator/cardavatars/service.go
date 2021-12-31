@@ -15,6 +15,7 @@ import (
 
 	"github.com/zeebo/errs"
 
+	"boonji/internal/probability"
 	"boonji/pkg/imageprocessing"
 	"boonji/pkg/rand"
 )
@@ -64,45 +65,27 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 
 		// Heads
 		pathToHeads := filepath.Join(service.config.PathToAvararsComponents, service.config.HeadsFolder)
-		if count, err = imageprocessing.LayerComponentsCount(pathToHeads); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		avatar.Heads = rand.SearchValueByPercent(probability.Heads)
 
-		if avatar.Heads, err = rand.RandomInRange(count); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-
-		if layer, err = imageprocessing.CreateLayer(pathToHeads, avatar.Heads); err != nil {
+		if layer, err = imageprocessing.CreateLayerByFileName(pathToHeads, avatar.Heads); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
 		layers = append(layers, layer)
 
 		// Tshirts
 		pathToTshirts := filepath.Join(service.config.PathToAvararsComponents, service.config.TshirtsFolder)
-		if count, err = imageprocessing.LayerComponentsCount(pathToTshirts); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		avatar.Tshirts = rand.SearchValueByPercent(probability.Tshirts7)
 
-		if avatar.Tshirts, err = rand.RandomInRange(count); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-
-		if layer, err = imageprocessing.CreateLayer(pathToTshirts, avatar.Tshirts); err != nil {
+		if layer, err = imageprocessing.CreateLayerByFileName(pathToTshirts, avatar.Tshirts); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
 		layers = append(layers, layer)
 
 		// Headwear
 		pathToHeadwear := filepath.Join(service.config.PathToAvararsComponents, service.config.HeadwearFolder)
-		if count, err = imageprocessing.LayerComponentsCount(pathToHeadwear); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		avatar.Headwear = rand.SearchValueByPercent(probability.Hats7)
 
-		if avatar.Headwear, err = rand.RandomInRange(count); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-
-		if layer, err = imageprocessing.CreateLayer(pathToHeadwear, avatar.Headwear); err != nil {
+		if layer, err = imageprocessing.CreateLayerByFileName(pathToHeadwear, avatar.Headwear); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
 		layers = append(layers, layer)
@@ -110,21 +93,15 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 		// Glasses
 		if rand.IsIncludeRange(service.config.PercentageGlasses) {
 			pathToGlasses := filepath.Join(service.config.PathToAvararsComponents, service.config.GlassesFolder)
-			if count, err = imageprocessing.LayerComponentsCount(pathToGlasses); err != nil {
-				return ErrCardAvatars.Wrap(err)
-			}
+			avatar.Glasses = rand.SearchValueByPercent(probability.Glasses7)
 
-			if avatar.Glasses, err = rand.RandomInRange(count); err != nil {
-				return ErrCardAvatars.Wrap(err)
-			}
-
-			if layer, err = imageprocessing.CreateLayer(pathToGlasses, avatar.Glasses); err != nil {
+			if layer, err = imageprocessing.CreateLayerByFileName(pathToGlasses, avatar.Glasses); err != nil {
 				return ErrCardAvatars.Wrap(err)
 			}
 			layers = append(layers, layer)
 		}
 
-		stringComponent := fmt.Sprintf("%d_%d_%d_%d_%d", avatar.Background, avatar.Heads, avatar.Tshirts, avatar.Headwear, avatar.Glasses)
+		stringComponent := fmt.Sprintf("%v || %v || %v || %v || %v", avatar.Background, avatar.Heads, avatar.Tshirts, avatar.Headwear, avatar.Glasses)
 		for _, stringComp := range stringComponents {
 			if stringComp == stringComponent {
 				break

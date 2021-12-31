@@ -37,3 +37,17 @@ func Minute(start, end int) int {
 
 	return minute
 }
+
+// SearchValueByPercent search value string by percent.
+func SearchValueByPercent(generateMap map[string]int) string {
+	rand := rand.Intn(999) + 1
+	var sum int
+
+	for k, v := range generateMap {
+		sum += v
+		if rand <= sum {
+			return k
+		}
+	}
+	return ""
+}

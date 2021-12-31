@@ -48,6 +48,22 @@ func CreateLayer(path string, number int) (image.Image, error) {
 	return nil, fmt.Errorf("file does not exist")
 }
 
+// CreateLayerByFileName searches and decodes image to layer by name file.
+func CreateLayerByFileName(path string, fileName string) (image.Image, error) {
+	image, err := os.Open(filepath.Join(path, fileName+".png"))
+	if err != nil {
+		return nil, err
+	}
+	layer, err := png.Decode(image)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		err = errs.Combine(err, image.Close())
+	}()
+	return layer, nil
+}
+
 // Layering overlays image layers on the base image.
 func Layering(layers []image.Image, width, height int) *image.RGBA {
 	var generalImage *image.RGBA

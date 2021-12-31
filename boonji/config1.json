@@ -15,6 +15,7 @@
             "earringsFolder": "EARRING",
             "percentageHeadwear": 50,
             "withoutHair": 22,
+            "percentageNecklace": 75,
             "percentageGlasses": 85,
             "percentageEarrings": 25
         }

@@ -5,12 +5,12 @@ package cardavatars
 
 // Avatar entity describes the values that make up the avatar.
 type Avatar struct {
-	Background int `json:"background"`
-	Heads      int `json:"heads"`
-	Tshirts    int `json:"tshirts"`
-	Hair       int `json:"hair"`
-	Headwear   int `json:"headwear"`
-	Glasses    int `json:"glasses"`
+	Background int    `json:"background"`
+	Heads      string `json:"heads"`
+	Tshirts    string `json:"tshirts"`
+	Hair       string `json:"hair"`
+	Headwear   string `json:"headwear"`
+	Glasses    string `json:"glasses"`
 }
 
 // Config defines values needed by generate avatars.
