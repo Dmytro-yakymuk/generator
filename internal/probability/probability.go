@@ -207,10 +207,10 @@ var Glasses = map[string]int{
 
 var Earrings = map[string]int{
 	// 4 - 1000
-	"DIAMOND-STUD":   100,
-	"gold bitcoin":   200,
-	"eth black copy": 300,
-	"eth black":      400,
+	"DIAMOND-STUD": 100,
+	"GOLD-BITCOIN": 200,
+	"ETH-SILVER":   300,
+	"ETH-BLACK":    400,
 }
 
 //

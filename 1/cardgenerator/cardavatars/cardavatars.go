@@ -36,6 +36,11 @@ type Config struct {
 	PercentageNecklace int `json:"percentageNecklace"`
 	PercentageGlasses  int `json:"percentageGlasses"`
 	PercentageEarrings int `json:"percentageEarrings"`
+
+	Description string `json:"description"`
+	ExternalURL string `json:"externalUrl"`
+	Image       string `json:"image"`
+	PrefixName  string `json:"prefixName"`
 }
 
 // TypeImage defines the list of possible type of avatar image.

@@ -175,3 +175,44 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 
 	return nil
 }
+
+// NFT entity describes nft token format erc-721.
+type NFT struct {
+	Attributes  []Attribute `json:"attributes"`
+	Description string      `json:"description"`
+	ExternalURL string      `json:"external_url"`
+	Image       string      `json:"image"`
+	Name        string      `json:"name"`
+}
+
+// Attribute entity describes attributes for the item, which will show up on the OpenSea page for the item.
+type Attribute struct {
+	TraitType string      `json:"trait_type"`
+	Value     interface{} `json:"value"`
+	MaxValue  interface{} `json:"max_value,omitempty"`
+}
+
+// Generate generates values for nft token.
+func (service *Service) GenerateNFT(ctx context.Context, avatar Avatar, sequenceNumber int) NFT {
+	var attributes []Attribute
+
+	attributes = append(attributes, Attribute{TraitType: "BACKGROUND", Value: avatar.Background})
+	attributes = append(attributes, Attribute{TraitType: "HEADS", Value: avatar.Heads})
+	attributes = append(attributes, Attribute{TraitType: "TSHIRT", Value: avatar.Tshirts})
+	attributes = append(attributes, Attribute{TraitType: "NECKLACE", Value: avatar.Necklace})
+	attributes = append(attributes, Attribute{TraitType: "JACKET", Value: avatar.Jacket})
+	attributes = append(attributes, Attribute{TraitType: "HAIR", Value: avatar.Hair})
+	attributes = append(attributes, Attribute{TraitType: "HATS", Value: avatar.Headwear})
+	attributes = append(attributes, Attribute{TraitType: "GLASSES", Value: avatar.Glasses})
+	attributes = append(attributes, Attribute{TraitType: "EARRING", Value: avatar.Earrings})
+
+	nft := NFT{
+		Attributes:  attributes,
+		Description: service.config.Description,
+		ExternalURL: service.config.ExternalURL,
+		Image:       fmt.Sprintf(service.config.Image, sequenceNumber),
+		Name:        service.config.PrefixName,
+	}
+
+	return nft
+}
