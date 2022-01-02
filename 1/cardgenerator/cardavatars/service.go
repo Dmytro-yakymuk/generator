@@ -36,29 +36,22 @@ func NewService(config Config) *Service {
 }
 
 // Generate generates cards with avatar link.
-func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
+func (service *Service) Generate(ctx context.Context, start int, end int) error {
 	var stringComponents []string
-	i := 0
-	for i < cardsTotal {
+	i := start
+	for i <= end {
 		var (
 			avatar Avatar
 			layer  image.Image
 			layers []image.Image
-			count  int
 			err    error
 		)
 
 		// Background
 		pathToBackground := filepath.Join(service.config.PathToAvararsComponents, service.config.BackgroundFolder)
-		if count, err = imageprocessing.LayerComponentsCount(pathToBackground); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		avatar.Background = rand.SearchValueByPercent(probability.Background)
 
-		if avatar.Background, err = rand.RandomInRange(count); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-
-		if layer, err = imageprocessing.CreateLayer(pathToBackground, avatar.Background); err != nil {
+		if layer, err = imageprocessing.CreateLayerByFileName(pathToBackground, avatar.Background); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
 		layers = append(layers, layer)
@@ -143,7 +136,7 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 			layers = append(layers, layer)
 		}
 
-		stringComponent := fmt.Sprintf("%v || %v || %v || %v || %v || %v || %v || %v || %v", avatar.Background, avatar.Heads, avatar.Tshirts, avatar.Jacket, avatar.Necklace, avatar.Hair, avatar.Headwear, avatar.Glasses, avatar.Earrings)
+		stringComponent := fmt.Sprintf("%d. %s || %s || %s || %s || %s || %s || %s || %s || %s", i, avatar.Background, avatar.Heads, avatar.Tshirts, avatar.Jacket, avatar.Necklace, avatar.Hair, avatar.Headwear, avatar.Glasses, avatar.Earrings)
 		for _, stringComp := range stringComponents {
 			if stringComp == stringComponent {
 				break
@@ -152,12 +145,17 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 
 		originalAvatar := imageprocessing.Layering(layers, 0, 0)
 
-		if err = imageprocessing.SaveImage(service.config.PathToOutputAvarars, filepath.Join(service.config.PathToOutputAvarars, strconv.Itoa(i+1)+"."+string(TypeImagePNG)), originalAvatar); err != nil {
+		if err = imageprocessing.SaveImage(service.config.PathToOutputAvarars, filepath.Join(service.config.PathToOutputAvarars, strconv.Itoa(i)+"."+string(TypeImagePNG)), originalAvatar); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
+
+		if err = service.GenerateNFT(avatar, i); err != nil {
+			return err
+		}
+
 		stringComponents = append(stringComponents, stringComponent)
-		i++
 		fmt.Println(i)
+		i++
 	}
 
 	file, err := json.MarshalIndent(stringComponents, "", " ")
@@ -176,43 +174,54 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 	return nil
 }
 
-// NFT entity describes nft token format erc-721.
-type NFT struct {
-	Attributes  []Attribute `json:"attributes"`
-	Description string      `json:"description"`
-	ExternalURL string      `json:"external_url"`
-	Image       string      `json:"image"`
-	Name        string      `json:"name"`
-}
-
-// Attribute entity describes attributes for the item, which will show up on the OpenSea page for the item.
-type Attribute struct {
-	TraitType string      `json:"trait_type"`
-	Value     interface{} `json:"value"`
-	MaxValue  interface{} `json:"max_value,omitempty"`
-}
-
 // Generate generates values for nft token.
-func (service *Service) GenerateNFT(ctx context.Context, avatar Avatar, sequenceNumber int) NFT {
+func (service *Service) GenerateNFT(avatar Avatar, sequenceNumber int) error {
 	var attributes []Attribute
 
-	attributes = append(attributes, Attribute{TraitType: "BACKGROUND", Value: avatar.Background})
-	attributes = append(attributes, Attribute{TraitType: "HEADS", Value: avatar.Heads})
-	attributes = append(attributes, Attribute{TraitType: "TSHIRT", Value: avatar.Tshirts})
-	attributes = append(attributes, Attribute{TraitType: "NECKLACE", Value: avatar.Necklace})
-	attributes = append(attributes, Attribute{TraitType: "JACKET", Value: avatar.Jacket})
-	attributes = append(attributes, Attribute{TraitType: "HAIR", Value: avatar.Hair})
-	attributes = append(attributes, Attribute{TraitType: "HATS", Value: avatar.Headwear})
-	attributes = append(attributes, Attribute{TraitType: "GLASSES", Value: avatar.Glasses})
-	attributes = append(attributes, Attribute{TraitType: "EARRING", Value: avatar.Earrings})
+	if avatar.Background != "" {
+		attributes = append(attributes, Attribute{TraitType: "BACKGROUND", Value: avatar.Background})
+	}
+	if avatar.Heads != "" {
+		attributes = append(attributes, Attribute{TraitType: "HEADS", Value: avatar.Heads})
+	}
+	if avatar.Tshirts != "" {
+		attributes = append(attributes, Attribute{TraitType: "TSHIRT", Value: avatar.Tshirts})
+	}
+	if avatar.Necklace != "" {
+		attributes = append(attributes, Attribute{TraitType: "NECKLACE", Value: avatar.Necklace})
+	}
+	if avatar.Jacket != "" {
+		attributes = append(attributes, Attribute{TraitType: "JACKET", Value: avatar.Jacket})
+	}
+	if avatar.Hair != "" {
+		attributes = append(attributes, Attribute{TraitType: "HAIR", Value: avatar.Hair})
+	}
+	if avatar.Headwear != "" {
+		attributes = append(attributes, Attribute{TraitType: "HATS", Value: avatar.Headwear})
+	}
+	if avatar.Glasses != "" {
+		attributes = append(attributes, Attribute{TraitType: "GLASSES", Value: avatar.Glasses})
+	}
+	if avatar.Earrings != "" {
+		attributes = append(attributes, Attribute{TraitType: "EARRING", Value: avatar.Earrings})
+	}
 
 	nft := NFT{
 		Attributes:  attributes,
 		Description: service.config.Description,
 		ExternalURL: service.config.ExternalURL,
 		Image:       fmt.Sprintf(service.config.Image, sequenceNumber),
-		Name:        service.config.PrefixName,
+		Name:        service.config.Name,
 	}
 
-	return nft
+	file, err := json.MarshalIndent(nft, "", " ")
+	if err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(service.config.PathToOutputAvarars, os.ModePerm); err != nil {
+		return err
+	}
+
+	return ioutil.WriteFile(filepath.Join(service.config.PathToOutputAvarars, fmt.Sprintf("%d.json", sequenceNumber)), file, 0644)
 }

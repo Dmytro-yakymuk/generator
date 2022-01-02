@@ -22,7 +22,8 @@ type Peer struct {
 	Config Config
 	Log    logger.Logger
 
-	cardsTotal int
+	start int
+	end   int
 
 	// exposes avatar cards related logic.
 	CardAvatars struct {
@@ -31,11 +32,12 @@ type Peer struct {
 }
 
 // New is a constructor for cardgenerator.Peer.
-func New(logger logger.Logger, config Config, cardsTotal int) (peer *Peer, err error) {
+func New(logger logger.Logger, config Config, start int, end int) (peer *Peer, err error) {
 	peer = &Peer{
-		Log:        logger,
-		Config:     config,
-		cardsTotal: cardsTotal,
+		Log:    logger,
+		Config: config,
+		start:  start,
+		end:    end,
 	}
 
 	{ // avatar cards setup
@@ -47,6 +49,5 @@ func New(logger logger.Logger, config Config, cardsTotal int) (peer *Peer, err e
 
 // Generate initiates generation of avatar cards.
 func (peer *Peer) Generate(ctx context.Context) error {
-	err := peer.CardAvatars.Service.Generate(ctx, peer.cardsTotal)
-	return err
+	return peer.CardAvatars.Service.Generate(ctx, peer.start, peer.end)
 }

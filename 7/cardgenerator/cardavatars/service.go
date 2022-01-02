@@ -36,29 +36,22 @@ func NewService(config Config) *Service {
 }
 
 // Generate generates cards with avatar link.
-func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
+func (service *Service) Generate(ctx context.Context, start int, end int) error {
 	var stringComponents []string
-	i := 0
-	for i < cardsTotal {
+	i := start
+	for i <= end {
 		var (
 			avatar Avatar
 			layer  image.Image
 			layers []image.Image
-			count  int
 			err    error
 		)
 
 		// Background
 		pathToBackground := filepath.Join(service.config.PathToAvararsComponents, service.config.BackgroundFolder)
-		if count, err = imageprocessing.LayerComponentsCount(pathToBackground); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		avatar.Background = rand.SearchValueByPercent(probability.Background)
 
-		if avatar.Background, err = rand.RandomInRange(count); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-
-		if layer, err = imageprocessing.CreateLayer(pathToBackground, avatar.Background); err != nil {
+		if layer, err = imageprocessing.CreateLayerByFileName(pathToBackground, avatar.Background); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
 		layers = append(layers, layer)
@@ -101,7 +94,7 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 			layers = append(layers, layer)
 		}
 
-		stringComponent := fmt.Sprintf("%v || %v || %v || %v || %v", avatar.Background, avatar.Heads, avatar.Tshirts, avatar.Headwear, avatar.Glasses)
+		stringComponent := fmt.Sprintf("%d. %v || %v || %v || %v || %v", i, avatar.Background, avatar.Heads, avatar.Tshirts, avatar.Headwear, avatar.Glasses)
 		for _, stringComp := range stringComponents {
 			if stringComp == stringComponent {
 				break
@@ -110,12 +103,17 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 
 		originalAvatar := imageprocessing.Layering(layers, 0, 0)
 
-		if err = imageprocessing.SaveImage(service.config.PathToOutputAvarars, filepath.Join(service.config.PathToOutputAvarars, strconv.Itoa(i+1)+"."+string(TypeImagePNG)), originalAvatar); err != nil {
+		if err = imageprocessing.SaveImage(service.config.PathToOutputAvarars, filepath.Join(service.config.PathToOutputAvarars, strconv.Itoa(i)+"."+string(TypeImagePNG)), originalAvatar); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
+
+		if err = service.GenerateNFT(avatar, i); err != nil {
+			return err
+		}
+
 		stringComponents = append(stringComponents, stringComponent)
-		i++
 		fmt.Println(i)
+		i++
 	}
 
 	file, err := json.MarshalIndent(stringComponents, "", " ")
@@ -132,4 +130,44 @@ func (service *Service) Generate(ctx context.Context, cardsTotal int) error {
 	}
 
 	return nil
+}
+
+// Generate generates values for nft token.
+func (service *Service) GenerateNFT(avatar Avatar, sequenceNumber int) error {
+	var attributes []Attribute
+
+	if avatar.Background != "" {
+		attributes = append(attributes, Attribute{TraitType: "BACKGROUND", Value: avatar.Background})
+	}
+	if avatar.Heads != "" {
+		attributes = append(attributes, Attribute{TraitType: "HEADS", Value: avatar.Heads})
+	}
+	if avatar.Tshirts != "" {
+		attributes = append(attributes, Attribute{TraitType: "JACKET", Value: avatar.Tshirts})
+	}
+	if avatar.Headwear != "" {
+		attributes = append(attributes, Attribute{TraitType: "HATS", Value: avatar.Headwear})
+	}
+	if avatar.Glasses != "" {
+		attributes = append(attributes, Attribute{TraitType: "GLASSES", Value: avatar.Glasses})
+	}
+
+	nft := NFT{
+		Attributes:  attributes,
+		Description: service.config.Description,
+		ExternalURL: service.config.ExternalURL,
+		Image:       fmt.Sprintf(service.config.Image, sequenceNumber),
+		Name:        service.config.Name,
+	}
+
+	file, err := json.MarshalIndent(nft, "", " ")
+	if err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(service.config.PathToOutputAvarars, os.ModePerm); err != nil {
+		return err
+	}
+
+	return ioutil.WriteFile(filepath.Join(service.config.PathToOutputAvarars, fmt.Sprintf("%d.json", sequenceNumber)), file, 0644)
 }

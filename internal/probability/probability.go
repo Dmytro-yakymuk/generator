@@ -1,45 +1,80 @@
 package probability
 
+var Background = map[string]int{
+	// 31 - 1000
+	"APPLE-BG":               32,
+	"ARMYGREEN-BG":           32,
+	"BLUEGREEN-BG":           32,
+	"BLUE-RADIAL-BG":         32,
+	"CRIMSON-BG":             32,
+	"DAYBLUE-BG":             32,
+	"DUSK-BG":                32,
+	"GOLD-GRADIENT-BG":       32,
+	"GRAD-PINK":              32,
+	"GRASS-BG":               32,
+	"HOTPINK-BG":             32,
+	"LILAC-BLUE-GRADIENT-BG": 32,
+	"MIDNIGHTBLUE-BG":        32,
+	"MINT-BG":                32,
+	"NAVY-BG":                32,
+	"ORANGE-BG":              32,
+	"ORANGE-GRADIENT-BG":     32,
+	"PINK-BG":                32,
+	"PURPLE-GRADIENT-BG":     32,
+	"RADIAL-YELLOW-BG":       32,
+	"RED-BG":                 32,
+	"RETROGREEN-BG":          32,
+	"SILVER-BG":              32,
+	"SKY-GRADIENT-BG":        33,
+	"SMURF-BG":               33,
+	"STARLIGHT-BG":           33,
+	"SUNRISE-GRADIENT-BG":    33,
+	"SUNSET-BG":              33,
+	"TEQUILA-BG":             33,
+	"TURQUOISE-BG":           33,
+	"YELLOW-BG":              33,
+}
+
 var Heads = map[string]int{
 	// 35 - 1000
-	// 9 - 116
-	"DIAMOND-HEAD":    3,
-	"IRIDESCENT-HEAD": 5,
-	"ORB-HEAD":        8,
-	"CRACKED-HEAD":    10,
-	"ZOMBIE-HEAD":     12,
-	"HELLO-HEAD":      15,
-	"DAMASCUS-HEAD":   18,
-	"HEART-HEAD":      20,
-	"WOOD-HEAD":       25,
+	// 9 - 168
+	"DIAMOND-HEAD":    11,
+	"IRIDESCENT-HEAD": 13,
+	"ORB-HEAD":        15,
+	"CRACKED-HEAD":    17,
+	"ZOMBIE-HEAD":     19,
+	"HELLO-HEAD":      21,
+	"DAMASCUS-HEAD":   22,
+	"HEART-HEAD":      24,
+	"WOOD-HEAD":       26,
 
-	// 26 - 884
-	"H1-HEAD":               34,
-	"H2-HEAD":               34,
-	"H3-HEAD":               34,
-	"H4-HEAD":               34,
-	"CARBON-HEAD":           34,
-	"SMILEY-HEAD":           34,
-	"PAINT-HEAD":            34,
-	"METALROUGH-HEAD":       34,
-	"GOONGANG-HEAD":         34,
-	"WAVES-HEAD":            34,
-	"GREYSCALE-WAVES-HEAD":  34,
-	"STICKERBOMB-HEAD":      34,
-	"TAG-HEAD":              34,
-	"TAG-PURPLE-HEAD":       34,
-	"GOONZ-PURPLE-HEAD":     34,
-	"GOONZ-YELLOW-HEAD":     34,
-	"TERRAZZO-PURPLE-HEAD":  34,
-	"SPLATTER-BLUE-HEAD":    34,
-	"CONCRETE-HEAD":         34,
-	"GLITTER-BLACK-HEAD":    34,
-	"GREY-HEAD":             34,
-	"TERRAZZO-BLUE-HEAD":    34,
-	"GLITTER-PURPLE-HEAD":   34,
-	"WORNSTEEL-HEAD":        34,
-	"POLISHEDCONCRETE-HEAD": 34,
-	"SILVER-GLITTER-HEAD":   34,
+	// 26 -  832
+	"H1-HEAD":               32,
+	"H2-HEAD":               32,
+	"H3-HEAD":               32,
+	"H4-HEAD":               32,
+	"CARBON-HEAD":           32,
+	"SMILEY-HEAD":           32,
+	"PAINT-HEAD":            32,
+	"METALROUGH-HEAD":       32,
+	"GOONGANG-HEAD":         32,
+	"WAVES-HEAD":            32,
+	"GREYSCALE-WAVES-HEAD":  32,
+	"STICKERBOMB-HEAD":      32,
+	"TAG-HEAD":              32,
+	"TAG-PURPLE-HEAD":       32,
+	"GOONZ-PURPLE-HEAD":     32,
+	"GOONZ-YELLOW-HEAD":     32,
+	"TERRAZZO-PURPLE-HEAD":  32,
+	"SPLATTER-BLUE-HEAD":    32,
+	"CONCRETE-HEAD":         32,
+	"GLITTER-BLACK-HEAD":    32,
+	"GREY-HEAD":             32,
+	"TERRAZZO-BLUE-HEAD":    32,
+	"GLITTER-PURPLE-HEAD":   32,
+	"WORNSTEEL-HEAD":        32,
+	"POLISHEDCONCRETE-HEAD": 32,
+	"SILVER-GLITTER-HEAD":   32,
 }
 
 var Tshirts = map[string]int{
@@ -116,75 +151,75 @@ var Jackets = map[string]int{
 var Updo string = "MOHAWK-HAIR"
 var Hairs = map[string]int{
 	// 26 - 1000
-	// 18 - 344
-	"FLAME-PURPLE-HAIR": 3,
-	"FLAME-HAIR":        5,
-	"HEART-HAIR":        7,
-	"TIGERORANGE-HAIR":  10,
-	"TIGERRED-HAIR":     12,
-	"LEOPARD-HAIR":      15,
-	"MARY-HAIR":         17,
-	"SKULL-HAIR":        20,
-	"SKULL-INVERT-HAIR": 21,
-	"BLACK-FADE":        22,
-	"NEON-HAIR":         23,
-	"ASTRO-HAIR":        24,
-	"GREYSCALE-HAIR":    25,
-	"FRUITY-HAIR":       26,
-	"PLAYDOUGH-HAIR":    27,
-	"LAVALAMP-HAIR":     28,
-	"ALIEN-HAIR":        29,
-	"PINKDOT-HAIR":      30,
+	// 18 - 408
+	"FLAME-PURPLE-HAIR": 10,
+	"FLAME-HAIR":        12,
+	"HEART-HAIR":        14,
+	"TIGERORANGE-HAIR":  16,
+	"TIGERRED-HAIR":     18,
+	"LEOPARD-HAIR":      20,
+	"MARY-HAIR":         21,
+	"SKULL-HAIR":        22,
+	"SKULL-INVERT-HAIR": 23,
+	"BLACK-FADE":        24,
+	"NEON-HAIR":         25,
+	"ASTRO-HAIR":        26,
+	"GREYSCALE-HAIR":    27,
+	"FRUITY-HAIR":       28,
+	"PLAYDOUGH-HAIR":    29,
+	"LAVALAMP-HAIR":     30,
+	"ALIEN-HAIR":        31,
+	"PINKDOT-HAIR":      32,
 
-	// 8 - 656
-	"COW":            82,
-	"SULLY-HAIR":     82,
-	"SYRUP-HAIR":     82,
-	"STARLIGHT-HAIR": 82,
-	"SKY-HAIR":       82,
-	"BUBBLEGUM-HAIR": 82,
-	"CARPET-HAIR":    82,
-	"MOHAWK-HAIR":    82,
+	// 8 - 592
+	"COW":            74,
+	"SULLY-HAIR":     74,
+	"SYRUP-HAIR":     74,
+	"STARLIGHT-HAIR": 74,
+	"SKY-HAIR":       74,
+	"BUBBLEGUM-HAIR": 74,
+	"CARPET-HAIR":    74,
+	"MOHAWK-HAIR":    74,
 }
 
 var Hats = map[string]int{
 	// 33 - 1000
-	// 26 - 622
-	"HELECOPTER-HELICOPTER":   3,
-	"SQUIGGLE-HAT":            5,
-	"JACKSON-HAT":             8,
-	"BLACK-LOGO-HAT-REVERSE":  10,
-	"BLACK-FLIP-HAT":          12,
-	"BLACK-GOONZ-HAT":         15,
-	"BLACK-HAT-TAG":           18,
-	"BLACK-LOGO-HAT-FRONT":    20,
-	"BANDANA-PAISLEY":         21,
-	"GARDA-BUCKET-HAT":        22,
-	"SHERIFF-HAT":             23,
-	"BANDANA-GREENCAMO":       24,
-	"CAMO-VISOR":              25,
-	"WHITE-SWEAT":             26,
-	"RED-SWEAT":               27,
-	"BLACK-SWEAT":             28,
-	"BLUE-SWEAT":              29,
-	"LEATHER-VISOR":           30,
-	"CHROME-RED-HAT-REVERSE":  31,
-	"BLUE-BASEBALL-FRONT":     32,
-	"CHROME-BLUE-HAT-REVERSE": 33,
-	"PURPLE-BLOB-HAT":         34,
-	"PINK-BLOB-HAT":           35,
-	"PURPLE-BASEBALL-FRONT":   36,
-	"PURPLE-STRIPE-BACKWARD":  37,
-	"PURPLE-SUEDE-VISOR":      38,
+	// 26 - 699
+	"HELECOPTER-HELICOPTER":   10,
+	"SQUIGGLE-HAT":            11,
+	"JACKSON-HAT":             14,
+	"BLACK-LOGO-HAT-REVERSE":  16,
+	"BLACK-FLIP-HAT":          18,
+	"BLACK-GOONZ-HAT":         20,
+	"BLACK-HAT-TAG":           21,
+	"BLACK-LOGO-HAT-FRONT":    22,
+	"BANDANA-PAISLEY":         23,
+	"GARDA-BUCKET-HAT":        24,
+	"SHERIFF-HAT":             25,
+	"BANDANA-GREENCAMO":       26,
+	"CAMO-VISOR":              27,
+	"WHITE-SWEAT":             28,
+	"RED-SWEAT":               29,
+	"BLACK-SWEAT":             30,
+	"BLUE-SWEAT":              31,
+	"LEATHER-VISOR":           32,
+	"CHROME-RED-HAT-REVERSE":  33,
+	"BLUE-BASEBALL-FRONT":     34,
+	"CHROME-BLUE-HAT-REVERSE": 35,
+	"PURPLE-BLOB-HAT":         36,
+	"PINK-BLOB-HAT":           37,
+	"PURPLE-BASEBALL-FRONT":   38,
+	"PURPLE-STRIPE-BACKWARD":  39,
+	"PURPLE-SUEDE-VISOR":      40,
 
-	// 7 - 378
-	"SUEDE-VISOR":              57,
-	"BLACK-FEDORA":             57,
-	"CHROME-GREEN-HAT-REVERSE": 57,
-	"GOONZ-LOGO-HAT":           57,
-	"MC'D-RED-VISOR":           57,
-	"BLACK-SILVER-GEO-HAT":     57,
-	"BANDANA-SNOW":             57,
+	// 7 - 301
+	"SUEDE-VISOR":              43,
+	"BLACK-FEDORA":             43,
+	"CHROME-GREEN-HAT-REVERSE": 43,
+	"GOONZ-LOGO-HAT":           43,
+	"MC'D-RED-VISOR":           43,
+	"BLACK-SILVER-GEO-HAT":     43,
+	"BANDANA-SNOW":             43,
 }
 
 var Glasses = map[string]int{
@@ -221,20 +256,20 @@ var Earrings = map[string]int{
 // 2 ////////////////////////////////
 var Tshirts2 = map[string]int{
 	// 14 - 1000
-	"1":               10,
-	"10":              20,
-	"11":              30,
-	"14":              40,
-	"12":              50,
-	"goonz black0026": 60,
-	"13":              70,
-	"5":               80,
-	"2":               90,
-	"6":               95,
-	"7":               100,
-	"3":               110,
-	"8":               120,
-	"9":               125,
+	"MONA-HOOD-DOWN":               10,
+	"PIXEL-HOOD-DOWN":              20,
+	"PIXEL-HOOD-DOWN-OPTIMUS":      30,
+	"GRAFFITI-HOOD-DOWN":           40,
+	"PIXEL-MCD-HOODY-DOWN":         50,
+	"SKULLSNAKE-HOOD-DOWN":         60,
+	"CONCRETE-HOOD-DOWN":           70,
+	"GOONZ-BLACK-HOOD-DOWN":        80,
+	"REAPER-HOOD-DOWN":             90,
+	"GOONZ-PURPLE-DOWN":            95,
+	"GOONZ-BALLER-HOOD-DOWN":       100,
+	"SUEDE-HOOD-DOWN":              110,
+	"GOONZ-BALLER-HOOD-DOWN-WHITE": 120,
+	"CAMO-HOOD-DOWN":               125,
 }
 
 //
@@ -245,9 +280,9 @@ var Tshirts2 = map[string]int{
 // 3 ////////////////////////////////
 var Tshirts3 = map[string]int{
 	// 3 - 1000
-	"weed":       200,
-	"swag2":      300,
-	"red-stripe": 500,
+	"WEED-JACKETZIPPED":          200,
+	"PURPLE-SMILEY-JACKETZIPPED": 300,
+	"RED-SUEDE-JACKETZIPPED":     500,
 }
 
 //
@@ -258,7 +293,7 @@ var Tshirts3 = map[string]int{
 // 4 ////////////////////////////////
 var Tshirts4 = map[string]int{
 	// 1 - 1000
-	"layer 11": 1000,
+	"SUIT-BLACK": 1000,
 }
 
 //
@@ -269,10 +304,10 @@ var Tshirts4 = map[string]int{
 // 5 ////////////////////////////////
 var Tshirts5 = map[string]int{
 	// 4 - 1000
-	"2_0026": 100,
-	"1_0026": 200,
-	"3_0026": 300,
-	"4_0026": 400,
+	"OIL-PUFFA":                100,
+	"YELLOW-PUFFA":             200,
+	"BLACK-PUFFA":              300,
+	"IRIDESCENT-GLITTER-PUFFA": 400,
 }
 
 //
@@ -284,8 +319,8 @@ var Tshirts5 = map[string]int{
 // 6 ////////////////////////////////
 var Tshirts6 = map[string]int{
 	// 2 - 1000
-	"SUEDE RED":     350,
-	"SUEDE BLACK 2": 650,
+	"SUEDE-RED-HOODUP":   350,
+	"SUEDE-BLACK-HOODUP": 650,
 }
 
 var Hairs6 = map[string]int{
@@ -322,30 +357,30 @@ var Hairs6 = map[string]int{
 
 var Hats6 = map[string]int{
 	// 33 - 1000
-	"1_0022":         125,
-	"layer 6":        125,
-	"layer 6 copy":   125,
-	"layer 6 copy 2": 125,
-	"layer 7":        125,
-	"layer 7 copy":   125,
-	"layer 7 copy 2": 125,
-	"layer 7 copy 3": 125,
+	"WHITE-BALACLAVA":   125,
+	"BANDANA-PAISLEY":   125,
+	"BANDANA-SNOW":      125,
+	"BANDANA-GREENCAMO": 125,
+	"WHITE-SWEAT":       125,
+	"RED-SWEAT":         125,
+	"BLUE-SWEAT":        125,
+	"BLACK-SWEAT":       125,
 }
 
 var Glasses6 = map[string]int{
 	// 12 - 1000
-	"layer 4 copy":       10,
-	"bitcoin0014":        30,
-	"eth0014":            50,
-	"google--trance0014": 60,
-	"google-left0014":    70,
-	"googly--cross0014":  80,
-	"googly--stoned0014": 90,
-	"layer1 copy":        100,
-	"layer 2 copy":       110,
-	"layer 2":            120,
-	"layer 4":            130,
-	"smiley0014":         150,
+	"3D-SHADES":       10,
+	"BITCOIN-SHADES":  30,
+	"ETH-SHADES":      50,
+	"GOOGLY-TRANCE":   60,
+	"GOOGLY-LOOK":     70,
+	"GOOGLY-CROSS":    80,
+	"GOOGLY-STONED":   90,
+	"BLACKOUT-SHADES": 100,
+	"BLACK-SHADE":     110,
+	"RED-SHADE":       120,
+	"MEME-SHADE":      130,
+	"SMILEY-SHADES":   150,
 }
 
 //
@@ -357,23 +392,23 @@ var Glasses6 = map[string]int{
 // 7 ////////////////////////////////
 var Tshirts7 = map[string]int{
 	// 2 - 1000
-	"1_0026": 500,
-	"3_0026": 500,
+	"YELLOW-PUFFA": 500,
+	"BLACK_PUFFA":  500,
 }
 
 var Hats7 = map[string]int{
 	// 1 - 1000
-	"LAYER 13": 1000,
+	"GOONGANG-BALACLAVA": 1000,
 }
 
 var Glasses7 = map[string]int{
 	// 8 - 1000 + 400
-	"layer 4 copy":       50,
-	"google--trance0014": 75,
-	"google-left0014":    100,
-	"googly-cross0014":   125,
-	"googy--stoned0014":  150,
-	"layer 1 copty":      155,
-	"layer 4":            165,
-	"smiley0014":         180,
+	"3D-SHADES":       50,
+	"GOOGLY-TRANCE":   75,
+	"GOOGLY-LOOK":     100,
+	"GOOGLY-CROSS":    125,
+	"GOOGLY-STONED":   150,
+	"BLACKOUT-SHADES": 155,
+	"MEME-SHADE":      165,
+	"SMILEY-SHADES":   180,
 }

@@ -121,19 +121,24 @@ func cmdRun(cmd *cobra.Command, args []string) (err error) {
 		log.Error("Could not read config from default place", Error.Wrap(err))
 		return Error.Wrap(err)
 	}
-
-	if len(args) == 0 {
+	if len(args) < 2 {
 		log.Error("agrs are empty", Error.New("agrs are empty"))
 		return Error.New("agrs are empty")
 	}
 
-	count, err := strconv.Atoi(args[0])
+	start, err := strconv.Atoi(args[0])
 	if err != nil {
 		log.Error("Error convert agrs to integer", Error.Wrap(err))
 		return Error.Wrap(err)
 	}
 
-	peer, err := cardgenerator.New(log, runCfg.Config, count)
+	end, err := strconv.Atoi(args[1])
+	if err != nil {
+		log.Error("Error convert agrs to integer", Error.Wrap(err))
+		return Error.Wrap(err)
+	}
+
+	peer, err := cardgenerator.New(log, runCfg.Config, start, end)
 	if err != nil {
 		log.Error("Error starting card generator bank service", Error.Wrap(err))
 		return Error.Wrap(err)

@@ -5,7 +5,7 @@ package cardavatars
 
 // Avatar entity describes the values that make up the avatar.
 type Avatar struct {
-	Background int    `json:"background"`
+	Background string `json:"background"`
 	Heads      string `json:"heads"`
 	Tshirts    string `json:"tshirts"`
 	Necklace   string `json:"necklace"`
@@ -40,7 +40,23 @@ type Config struct {
 	Description string `json:"description"`
 	ExternalURL string `json:"externalUrl"`
 	Image       string `json:"image"`
-	PrefixName  string `json:"prefixName"`
+	Name        string `json:"name"`
+}
+
+// NFT entity describes nft token format erc-721.
+type NFT struct {
+	Attributes  []Attribute `json:"attributes"`
+	Description string      `json:"description"`
+	ExternalURL string      `json:"external_url"`
+	Image       string      `json:"image"`
+	Name        string      `json:"name"`
+}
+
+// Attribute entity describes attributes for the item, which will show up on the OpenSea page for the item.
+type Attribute struct {
+	TraitType string      `json:"trait_type"`
+	Value     interface{} `json:"value"`
+	MaxValue  interface{} `json:"max_value,omitempty"`
 }
 
 // TypeImage defines the list of possible type of avatar image.
