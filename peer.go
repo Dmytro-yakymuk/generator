@@ -1,13 +1,13 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-package cardgenerator
+package generator
 
 import (
 	"context"
 
-	"boonji/6/cardgenerator/cardavatars"
-	"boonji/internal/logger"
+	"generator/cardavatars"
+	"generator/internal/logger"
 )
 
 // Config is the global configuration for cardgenerator.

@@ -6,6 +6,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"generator"
 	"io/ioutil"
 	"os"
 	"path"
@@ -17,8 +18,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/zeebo/errs"
 
-	"boonji/4/cardgenerator"
-	"boonji/internal/logger/zaplog"
+	"generator/internal/logger/zaplog"
 )
 
 // Error is a default error type for card generator cli.
@@ -26,7 +26,7 @@ var Error = errs.Class("card generator cli error")
 
 // Config contains configurable values for card generator project.
 type Config struct {
-	cardgenerator.Config `json:"config"`
+	generator.Config `json:"config"`
 }
 
 // commands.
@@ -59,7 +59,7 @@ var (
 	setupCfg Config
 	runCfg   Config
 
-	defaultConfigDir = ApplicationDir("boonji")
+	defaultConfigDir = ApplicationDir("generator")
 )
 
 func init() {
@@ -88,7 +88,7 @@ func cmdSetup(cmd *cobra.Command, args []string) (err error) {
 		return Error.Wrap(err)
 	}
 
-	configFile, err := os.Create(path.Join(setupDir, "config4.json"))
+	configFile, err := os.Create(path.Join(setupDir, "config.json"))
 	if err != nil {
 		log.Error("could not create config file", Error.Wrap(err))
 		return Error.Wrap(err)
@@ -139,7 +139,7 @@ func cmdRun(cmd *cobra.Command, args []string) (err error) {
 		return Error.Wrap(err)
 	}
 
-	peer, err := cardgenerator.New(log, runCfg.Config, start, end)
+	peer, err := generator.New(log, runCfg.Config, start, end)
 	if err != nil {
 		log.Error("Error starting card generator bank service", Error.Wrap(err))
 		return Error.Wrap(err)
@@ -159,7 +159,7 @@ func cmdDestroy(cmd *cobra.Command, args []string) (err error) {
 
 // readConfig reads config from default config dir.
 func readConfig() (config Config, err error) {
-	configBytes, err := ioutil.ReadFile(path.Join(defaultConfigDir, "config4.json"))
+	configBytes, err := ioutil.ReadFile(path.Join(defaultConfigDir, "config.json"))
 	if err != nil {
 		return Config{}, err
 	}

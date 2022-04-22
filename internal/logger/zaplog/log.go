@@ -6,7 +6,7 @@ package zaplog
 import (
 	"go.uber.org/zap"
 
-	"boonji/internal/logger"
+	"generator/internal/logger"
 )
 
 // ensures that zaplog implements logger.Logger.

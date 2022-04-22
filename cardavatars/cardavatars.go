@@ -5,11 +5,15 @@ package cardavatars
 
 // Avatar entity describes the values that make up the avatar.
 type Avatar struct {
-	Background string `json:"background"`
-	Heads      string `json:"heads"`
-	Tshirts    string `json:"tshirts"`
-	Headwear   string `json:"headwear"`
-	Glasses    string `json:"glasses"`
+	Background int `json:"background"`
+	Back       int `json:"back"`
+	Stand      int `json:"stand"`
+	Shell      int `json:"shell"`
+	Eye        int `json:"eye"`
+	Accessorie int `json:"accessorie"`
+	Hat        int `json:"hat"`
+	Glasse     int `json:"glasse"`
+	Mouth      int `json:"mouth"`
 }
 
 // Config defines values needed by generate avatars.
@@ -18,13 +22,17 @@ type Config struct {
 	PathToOutputAvarars     string `json:"pathToOutputAvatars"`
 	PathToOutputJSON        string `json:"pathToOutputJSON"`
 
-	BackgroundFolder string `json:"backgroundFolder"`
-	HeadsFolder      string `json:"headsFolder"`
-	TshirtsFolder    string `json:"tshirtsFolder"`
-	HeadwearFolder   string `json:"headwearFolder"`
-	GlassesFolder    string `json:"glassesFolder"`
+	BackgroundsFolder string `json:"backgroundsFolder"`
+	BacksFolder       string `json:"backsFolder"`
+	StandsFolder      string `json:"standsFolder"`
+	ShellsFolder      string `json:"shellsFolder"`
+	EyesFolder        string `json:"eyesFolder"`
+	AccessoriesFolder string `json:"accessoriesFolder"`
+	HatsFolder        string `json:"hatsFolder"`
+	GlassesFolder     string `json:"glassesFolder"`
+	MouthPropsFolder  string `json:"mouthPropsFolder"`
 
-	PercentageGlasses int `json:"percentageGlasses"`
+	Mouths []int `json:"mouths"`
 
 	Description string `json:"description"`
 	ExternalURL string `json:"externalUrl"`
@@ -34,11 +42,11 @@ type Config struct {
 
 // NFT entity describes nft token format erc-721.
 type NFT struct {
-	Attributes  []Attribute `json:"attributes"`
 	Description string      `json:"description"`
 	ExternalURL string      `json:"external_url"`
 	Image       string      `json:"image"`
 	Name        string      `json:"name"`
+	Attributes  []Attribute `json:"attributes"`
 }
 
 // Attribute entity describes attributes for the item, which will show up on the OpenSea page for the item.
