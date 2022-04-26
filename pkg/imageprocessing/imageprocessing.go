@@ -23,29 +23,29 @@ func LayerComponentsCount(pathToLayerComponents string) (int, error) {
 }
 
 // CreateLayer searches and decodes image to layer.
-func CreateLayer(path string, number int) (image.Image, error) {
+func CreateLayer(path string, number int) (image.Image, string, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf(path + " - folder does not exist")
+		return nil, "", fmt.Errorf(path + " - folder does not exist")
 	}
 
 	for k, file := range files {
 		if k+1 == number {
 			image, err := os.Open(filepath.Join(path, file.Name()))
 			if err != nil {
-				return nil, err
+				return nil, file.Name(), err
 			}
 			layer, err := png.Decode(image)
 			if err != nil {
-				return nil, err
+				return nil, file.Name(), err
 			}
 			defer func() {
 				err = errs.Combine(err, image.Close())
 			}()
-			return layer, nil
+			return layer, file.Name(), nil
 		}
 	}
-	return nil, fmt.Errorf("file does not exist")
+	return nil, "", fmt.Errorf("file does not exist")
 }
 
 // CreateLayerByFileName searches and decodes image to layer by name file.

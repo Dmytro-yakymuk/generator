@@ -16,6 +16,19 @@ type Avatar struct {
 	Mouth      int `json:"mouth"`
 }
 
+// Metadata ...
+type Metadata struct {
+	Background string `json:"background"`
+	Back       string `json:"back"`
+	Stand      string `json:"stand"`
+	Shell      string `json:"shell"`
+	Eye        string `json:"eye"`
+	Accessorie string `json:"accessorie"`
+	Hat        string `json:"hat"`
+	Glasse     string `json:"glasse"`
+	Mouth      string `json:"mouth"`
+}
+
 // Config defines values needed by generate avatars.
 type Config struct {
 	PathToAvararsComponents string `json:"pathToAvararsComponents"`
