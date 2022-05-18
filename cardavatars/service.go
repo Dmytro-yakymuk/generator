@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"image"
 	"io/ioutil"
-	"math/rand"
+	randMath "math/rand"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -17,7 +17,9 @@ import (
 
 	"github.com/zeebo/errs"
 
+	"generator/internal/probability"
 	"generator/pkg/imageprocessing"
+	"generator/pkg/rand"
 )
 
 // ErrCardAvatars indicated that there was an error in service.
@@ -38,179 +40,186 @@ func NewService(config Config) *Service {
 // Generate generates cards with avatar link.
 func (service *Service) Generate(ctx context.Context, start int, end int) error {
 	var stringComponents []string
+	countComponents := map[string]map[string]int{
+		"backgrounds": {},
+		"backs":       {},
+		"stands":      {},
+		"shells":      {},
+		"eyes":        {},
+		"accessories": {},
+		"hats":        {},
+		"glasses":     {},
+		"mouths":      {},
+	}
+
+	var tattos []int
+	if end-start >= 50 {
+		for i := 0; i < 50; i++ {
+			var isRepit bool
+			tat := randMath.Intn(end-start) + 1
+
+			for _, tatto := range tattos {
+				if tat == tatto {
+					isRepit = true
+				}
+			}
+
+			if !isRepit {
+				tattos = append(tattos, tat)
+			}
+		}
+	}
+
 	i := start
 	for i <= end {
 		var (
-			avatar   Avatar
-			metadata Metadata
-			layer    image.Image
-			layers   []image.Image
-			name     string
-			err      error
+			avatar Avatar
+			// metadata Metadata
+			layer  image.Image
+			layers []image.Image
+			err    error
 		)
 
 		// Backgrounds
 		pathToBackground := filepath.Join(service.config.PathToAvararsComponents, service.config.BackgroundsFolder)
-		count, err := imageprocessing.LayerComponentsCount(pathToBackground)
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		avatar.Background = rand.Intn(count) + 1
+		avatar.Background = rand.SearchValueByPercent(probability.Background)
 
-		if layer, name, err = imageprocessing.CreateLayer(pathToBackground, avatar.Background); err != nil {
+		if layer, err = imageprocessing.CreateLayerByFileName(pathToBackground, avatar.Background); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
-		resultBackgrounds := strings.Split(name, ".")
-		metadata.Background = resultBackgrounds[0]
+
+		// resultBackgrounds := strings.Split(avatar.Background, "_")
+		// metadata.Background = resultBackgrounds[0]
+		resultBackgrounds := strings.Split(avatar.Background, "_")
+		countComponents["backgrounds"][resultBackgrounds[0]]++
 		layers = append(layers, layer)
 
 		// Backs
-		pathToBack := filepath.Join(service.config.PathToAvararsComponents, service.config.BacksFolder)
-		count, err = imageprocessing.LayerComponentsCount(pathToBack)
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		avatar.Back = rand.Intn(count) + 1
+		if rand.IsIncludeRange(probability.DropoutPercentage) {
+			pathToBack := filepath.Join(service.config.PathToAvararsComponents, service.config.BacksFolder)
+			avatar.Back = rand.SearchValueByPercent(probability.Back)
 
-		if layer, name, err = imageprocessing.CreateLayer(pathToBack, avatar.Back); err != nil {
-			return ErrCardAvatars.Wrap(err)
+			if layer, err = imageprocessing.CreateLayerByFileName(pathToBack, avatar.Back); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
+
+			resultBacks := strings.Split(avatar.Back, "_")
+			countComponents["backs"][resultBacks[0]]++
+			layers = append(layers, layer)
 		}
-		resultBacks := strings.Split(name, ".")
-		metadata.Back = resultBacks[0]
-		layers = append(layers, layer)
 
 		// Stands
 		pathToStand := filepath.Join(service.config.PathToAvararsComponents, service.config.StandsFolder)
-		count, err = imageprocessing.LayerComponentsCount(pathToStand)
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		avatar.Stand = rand.Intn(count) + 1
+		avatar.Stand = rand.SearchValueByPercent(probability.Stand)
 
-		if layer, name, err = imageprocessing.CreateLayer(pathToStand, avatar.Stand); err != nil {
+		if layer, err = imageprocessing.CreateLayerByFileName(pathToStand, avatar.Stand); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
-		resultStands := strings.Split(name, ".")
-		metadata.Stand = resultStands[0]
+
+		resultStands := strings.Split(avatar.Stand, "_")
+		countComponents["stands"][resultStands[0]]++
 		layers = append(layers, layer)
 
 		// Shells
 		pathToShell := filepath.Join(service.config.PathToAvararsComponents, service.config.ShellsFolder)
-		count, err = imageprocessing.LayerComponentsCount(pathToShell)
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		avatar.Shell = rand.Intn(count) + 1
+		shellNumber := rand.SearchValueByPercent(probability.ShellNumbers)
+		shellType := rand.SearchValueByPercent(probability.ShellTypes)
+		avatar.Shell = shellNumber + shellType + probability.ShellNames[shellNumber]
 
-		if layer, name, err = imageprocessing.CreateLayer(pathToShell, avatar.Shell); err != nil {
+		if layer, err = imageprocessing.CreateLayerByFileName(pathToShell, avatar.Shell); err != nil {
 			return ErrCardAvatars.Wrap(err)
 		}
-		resultShells := strings.Split(name, "_")
-		metadata.Shell = resultShells[0]
-		shell := resultShells[1]
+
+		resultShells := strings.Split(avatar.Shell, "_")
+		countComponents["shells"][resultShells[0]]++
 		layers = append(layers, layer)
 
 		// Eyes
-		pathToEye := filepath.Join(service.config.PathToAvararsComponents, service.config.EyesFolder)
-		count, err = imageprocessing.LayerComponentsCount(pathToEye)
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		var eyeNumber string
+		if shellType != "smirk" && shellType != "smoke" {
+			pathToEye := filepath.Join(service.config.PathToAvararsComponents, service.config.EyesFolder)
+			eyeNumber := rand.SearchValueByPercent(probability.EyeNumbers)
+			avatar.Eye = eyeNumber + shellType + probability.EyeNames[eyeNumber]
 
-		var isEye bool = true
-		var eye string
-		for isEye {
-			avatar.Eye = rand.Intn(count) + 1
-			if layer, name, err = imageprocessing.CreateLayer(pathToEye, avatar.Eye); err != nil {
+			if layer, err = imageprocessing.CreateLayerByFileName(pathToEye, avatar.Eye); err != nil {
 				return ErrCardAvatars.Wrap(err)
 			}
-			resultEyes := strings.Split(name, "_")
-			metadata.Eye = resultEyes[0]
 
-			eye = resultEyes[1]
-			if shell != eye {
-				continue
-			}
-			isEye = false
-		}
-		layers = append(layers, layer)
-
-		// Accessories
-		pathToAccessorie := filepath.Join(service.config.PathToAvararsComponents, service.config.AccessoriesFolder)
-		count, err = imageprocessing.LayerComponentsCount(pathToAccessorie)
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		avatar.Accessorie = rand.Intn(count) + 1
-
-		if layer, name, err = imageprocessing.CreateLayer(pathToAccessorie, avatar.Accessorie); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		resultAccessories := strings.Split(name, ".")
-		metadata.Accessorie = resultAccessories[0]
-		layers = append(layers, layer)
-
-		// Hats
-		pathToHat := filepath.Join(service.config.PathToAvararsComponents, service.config.HatsFolder)
-		count, err = imageprocessing.LayerComponentsCount(pathToHat)
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		avatar.Hat = rand.Intn(count) + 1
-
-		if layer, name, err = imageprocessing.CreateLayer(pathToHat, avatar.Hat); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		resultHats := strings.Split(name, ".")
-		metadata.Hat = resultHats[0]
-		layers = append(layers, layer)
-
-		// Glasses
-		pathToGlasse := filepath.Join(service.config.PathToAvararsComponents, service.config.GlassesFolder)
-		count, err = imageprocessing.LayerComponentsCount(pathToGlasse)
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		avatar.Glasse = rand.Intn(count) + 1
-
-		if layer, name, err = imageprocessing.CreateLayer(pathToGlasse, avatar.Glasse); err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		resultGlasses := strings.Split(name, ".")
-		metadata.Glasse = resultGlasses[0]
-		layers = append(layers, layer)
-
-		// Mouths
-		pathToMouth := filepath.Join(service.config.PathToAvararsComponents, service.config.MouthPropsFolder)
-		count, err = imageprocessing.LayerComponentsCount(pathToMouth)
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-
-		var isMouth bool = true
-		for _, v := range service.config.Mouths {
-			shellResult := strings.Split(shell, ".")
-			shellInt, err := strconv.Atoi(shellResult[0])
-			if err != nil {
-				return ErrCardAvatars.Wrap(err)
-			}
-			if shellInt == v {
-				isMouth = false
-			}
-		}
-
-		if !isMouth {
-			avatar.Mouth = rand.Intn(count) + 1
-			if layer, name, err = imageprocessing.CreateLayer(pathToMouth, avatar.Mouth); err != nil {
-				return ErrCardAvatars.Wrap(err)
-			}
-			resultMouths := strings.Split(name, ".")
-			metadata.Mouth = resultMouths[0]
-
+			resultEyes := strings.Split(avatar.Eye, "_")
+			countComponents["eyes"][resultEyes[0]]++
 			layers = append(layers, layer)
 		}
 
-		stringComponent := fmt.Sprintf("%d || %d || %d || %d || %d || %d || %d || %d || %d", avatar.Background, avatar.Back, avatar.Stand,
+		// Accessories
+		if rand.IsIncludeRange(probability.DropoutPercentage) {
+			var isTotto bool
+			for _, totto := range tattos {
+				if totto+start == i {
+					isTotto = true
+				}
+			}
+
+			pathToAccessorie := filepath.Join(service.config.PathToAvararsComponents, service.config.AccessoriesFolder)
+			if isTotto {
+				avatar.Accessorie = "08_"
+			} else {
+				avatar.Accessorie = rand.SearchValueByPercent(probability.Accessories)
+			}
+
+			if layer, err = imageprocessing.CreateLayerByFileName(pathToAccessorie, avatar.Accessorie); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
+
+			resultAccessories := strings.Split(avatar.Accessorie, "_")
+			countComponents["accessories"][resultAccessories[0]]++
+			layers = append(layers, layer)
+		}
+
+		// Hats
+		if rand.IsIncludeRange(probability.DropoutPercentage) {
+			pathToHat := filepath.Join(service.config.PathToAvararsComponents, service.config.HatsFolder)
+			avatar.Hat = rand.SearchValueByPercent(probability.Hats)
+
+			if layer, err = imageprocessing.CreateLayerByFileName(pathToHat, avatar.Hat); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
+
+			resultHats := strings.Split(avatar.Hat, "_")
+			countComponents["hats"][resultHats[0]]++
+			layers = append(layers, layer)
+		}
+
+		// Glasses
+		if rand.IsIncludeRange(probability.DropoutPercentage) {
+			if eyeNumber != "07_" {
+				pathToGlasse := filepath.Join(service.config.PathToAvararsComponents, service.config.GlassesFolder)
+				avatar.Glasse = rand.SearchValueByPercent(probability.Glasses)
+
+				if layer, err = imageprocessing.CreateLayerByFileName(pathToGlasse, avatar.Glasse); err != nil {
+					return ErrCardAvatars.Wrap(err)
+				}
+
+				resultGlasses := strings.Split(avatar.Glasse, "_")
+				countComponents["glasses"][resultGlasses[0]]++
+				layers = append(layers, layer)
+			}
+		}
+
+		// Mouths
+		pathToMouth := filepath.Join(service.config.PathToAvararsComponents, service.config.MouthPropsFolder)
+
+		if shellType == "angry" || shellType == "cheeky" || shellType == "laugh" || shellType == "smirk" || shellType == "smoke" || shellType == "wavy" {
+			avatar.Mouth = rand.SearchValueByPercent(probability.Mouth)
+			if layer, err = imageprocessing.CreateLayerByFileName(pathToMouth, avatar.Mouth); err != nil {
+				return ErrCardAvatars.Wrap(err)
+			}
+
+			resultMouths := strings.Split(avatar.Mouth, "_")
+			countComponents["mouths"][resultMouths[0]]++
+			layers = append(layers, layer)
+		}
+
+		stringComponent := fmt.Sprintf("%s || %s || %s || %s || %s || %s || %s || %s || %s", avatar.Background, avatar.Back, avatar.Stand,
 			avatar.Shell, avatar.Eye, avatar.Accessorie, avatar.Hat, avatar.Glasse, avatar.Mouth)
 		for _, stringComp := range stringComponents {
 			if stringComp == stringComponent {
@@ -224,20 +233,20 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 			return ErrCardAvatars.Wrap(err)
 		}
 
-		shellResult := strings.Split(shell, ".")
-		shellInt, err := strconv.Atoi(shellResult[0])
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
+		// shellResult := strings.Split(shell, ".")
+		// shellInt, err := strconv.Atoi(shellResult[0])
+		// if err != nil {
+		// 	return ErrCardAvatars.Wrap(err)
+		// }
 
-		eyeResult := strings.Split(eye, ".")
-		eyeInt, err := strconv.Atoi(eyeResult[0])
-		if err != nil {
-			return ErrCardAvatars.Wrap(err)
-		}
-		avatar.Shell = shellInt
-		avatar.Eye = eyeInt
-		if err = service.GenerateNFT(metadata, i); err != nil {
+		// eyeResult := strings.Split(eye, ".")
+		// eyeInt, err := strconv.Atoi(eyeResult[0])
+		// if err != nil {
+		// 	return ErrCardAvatars.Wrap(err)
+		// }
+		// avatar.Shell = shellInt
+		// avatar.Eye = eyeInt
+		if err = service.GenerateNFT(Metadata(avatar), i); err != nil {
 			return err
 		}
 
@@ -245,16 +254,25 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 		i++
 	}
 
+	if err := os.MkdirAll(service.config.PathToOutputJSON, os.ModePerm); err != nil {
+		return err
+	}
+
 	file, err := json.MarshalIndent(stringComponents, "", " ")
 	if err != nil {
 		return err
 	}
 
-	if err = os.MkdirAll(service.config.PathToOutputJSON, os.ModePerm); err != nil {
+	if err = ioutil.WriteFile(filepath.Join(service.config.PathToOutputJSON, "components.json"), file, 0644); err != nil {
 		return err
 	}
 
-	if err = ioutil.WriteFile(filepath.Join(service.config.PathToOutputJSON, "components.json"), file, 0644); err != nil {
+	file2, err := json.MarshalIndent(countComponents, "", " ")
+	if err != nil {
+		return err
+	}
+
+	if err = ioutil.WriteFile(filepath.Join(service.config.PathToOutputJSON, "countComponents.json"), file2, 0644); err != nil {
 		return err
 	}
 

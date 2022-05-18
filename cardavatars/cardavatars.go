@@ -5,15 +5,15 @@ package cardavatars
 
 // Avatar entity describes the values that make up the avatar.
 type Avatar struct {
-	Background int `json:"background"`
-	Back       int `json:"back"`
-	Stand      int `json:"stand"`
-	Shell      int `json:"shell"`
-	Eye        int `json:"eye"`
-	Accessorie int `json:"accessorie"`
-	Hat        int `json:"hat"`
-	Glasse     int `json:"glasse"`
-	Mouth      int `json:"mouth"`
+	Background string `json:"background"`
+	Back       string `json:"back"`
+	Stand      string `json:"stand"`
+	Shell      string `json:"shell"`
+	Eye        string `json:"eye"`
+	Accessorie string `json:"accessorie"`
+	Hat        string `json:"hat"`
+	Glasse     string `json:"glasse"`
+	Mouth      string `json:"mouth"`
 }
 
 // Metadata ...
