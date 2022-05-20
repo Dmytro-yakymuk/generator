@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
 
 	"github.com/zeebo/errs"
 
@@ -90,8 +89,7 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 
 		// resultBackgrounds := strings.Split(avatar.Background, "_")
 		// metadata.Background = resultBackgrounds[0]
-		resultBackgrounds := strings.Split(avatar.Background, "_")
-		countComponents["backgrounds"][resultBackgrounds[0]]++
+		countComponents["backgrounds"][avatar.Background]++
 		layers = append(layers, layer)
 
 		// Backs
@@ -103,8 +101,7 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 				return ErrCardAvatars.Wrap(err)
 			}
 
-			resultBacks := strings.Split(avatar.Back, "_")
-			countComponents["backs"][resultBacks[0]]++
+			countComponents["backs"][avatar.Back]++
 			layers = append(layers, layer)
 		}
 
@@ -116,8 +113,7 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 			return ErrCardAvatars.Wrap(err)
 		}
 
-		resultStands := strings.Split(avatar.Stand, "_")
-		countComponents["stands"][resultStands[0]]++
+		countComponents["stands"][avatar.Stand]++
 		layers = append(layers, layer)
 
 		// Shells
@@ -130,8 +126,7 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 			return ErrCardAvatars.Wrap(err)
 		}
 
-		resultShells := strings.Split(avatar.Shell, "_")
-		countComponents["shells"][resultShells[0]]++
+		countComponents["shells"][avatar.Shell]++
 		layers = append(layers, layer)
 
 		// Eyes
@@ -145,8 +140,7 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 				return ErrCardAvatars.Wrap(err)
 			}
 
-			resultEyes := strings.Split(avatar.Eye, "_")
-			countComponents["eyes"][resultEyes[0]]++
+			countComponents["eyes"][avatar.Eye]++
 			layers = append(layers, layer)
 		}
 
@@ -170,8 +164,7 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 				return ErrCardAvatars.Wrap(err)
 			}
 
-			resultAccessories := strings.Split(avatar.Accessorie, "_")
-			countComponents["accessories"][resultAccessories[0]]++
+			countComponents["accessories"][avatar.Accessorie]++
 			layers = append(layers, layer)
 		}
 
@@ -184,8 +177,7 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 				return ErrCardAvatars.Wrap(err)
 			}
 
-			resultHats := strings.Split(avatar.Hat, "_")
-			countComponents["hats"][resultHats[0]]++
+			countComponents["hats"][avatar.Hat]++
 			layers = append(layers, layer)
 		}
 
@@ -199,8 +191,7 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 					return ErrCardAvatars.Wrap(err)
 				}
 
-				resultGlasses := strings.Split(avatar.Glasse, "_")
-				countComponents["glasses"][resultGlasses[0]]++
+				countComponents["glasses"][avatar.Glasse]++
 				layers = append(layers, layer)
 			}
 		}
@@ -214,8 +205,7 @@ func (service *Service) Generate(ctx context.Context, start int, end int) error 
 				return ErrCardAvatars.Wrap(err)
 			}
 
-			resultMouths := strings.Split(avatar.Mouth, "_")
-			countComponents["mouths"][resultMouths[0]]++
+			countComponents["mouths"][avatar.Mouth]++
 			layers = append(layers, layer)
 		}
 
